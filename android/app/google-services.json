@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "77720007526",
+    "project_id": "eventshalimar",
+    "storage_bucket": "eventshalimar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77720007526:android:21c4ba60ec7b01a89b4ea7",
+        "android_client_info": {
+          "package_name": "com.liveauctionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77720007526-7i0v0db8tqtusqpng56g2t9aphpq8r5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwf-XdrnucheN7OzY737BGYUQBIIYE-mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77720007526-7i0v0db8tqtusqpng56g2t9aphpq8r5n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77720007526:android:645138c33a6b88609b4ea7",
+        "android_client_info": {
+          "package_name": "com.shalimarco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77720007526-7i0v0db8tqtusqpng56g2t9aphpq8r5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwf-XdrnucheN7OzY737BGYUQBIIYE-mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77720007526-7i0v0db8tqtusqpng56g2t9aphpq8r5n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
