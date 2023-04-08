@@ -166,12 +166,12 @@ const SignUpScreen = ({ navigation }) => {
                   }
                 </View>
               </View>
-              <View style={{ alignItems: "center", marginTop: 10 }}>
-                <Text onPress={() => {
-                  navigation.navigate("LoginScreen")
-                }} style={{ color: "#006F66", fontFamily: "OpenSans-BoldItalic" }}>Already Have Acoount <Text onPress={() => {
-                  navigation.navigate("LoginScreen")
-                }} style={{ color: "black" }} >Login Now</Text></Text>
+              <View style={{ marginTop: 10 }}>
+                <TouchableOpacity
+                  style={styles.btn1}
+                >
+                  <Text style={styles.btntext1}>Already Have Account? <Text style={{ color: '#FF4949' }}>Login Now</Text></Text>
+                </TouchableOpacity>
               </View>
             </ScrollView>
           )}
@@ -223,4 +223,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 6,
   },
+  btn1: {
+    width: '80%',
+    alignSelf: 'center',
+  },
+  btntext1: {
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 16
+  }
 })

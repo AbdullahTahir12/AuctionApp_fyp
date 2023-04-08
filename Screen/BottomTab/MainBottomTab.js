@@ -16,16 +16,22 @@ const MainBottomTab = () => {
             activeColor="red"
             inactiveColor="green"
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
                 tabBarStyle: {
                     height: 60,
-                    paddingTop:5
+                    paddingTop: 5
                 },
-                tabBarLabel: ''
+                tabBarLabel: '',
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    elevation: 0,
+                    color:"#FF4949"
+                }
             }}
 
         >
             <Tab.Screen options={{
+
                 tabBarIcon: ({ color, size, focused }) => (
                     <FontAwesome5
                         name={focused ? 'home' : 'home'}

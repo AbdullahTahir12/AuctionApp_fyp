@@ -38,11 +38,13 @@ const ProfileScreen = ({ navigation }) => {
                         backgroundColor: "#FF5862",
                         paddingHorizontal: 40,
                         paddingVertical: 10,
-                        borderRadius: 10
+                        borderRadius: 10,
+                        width: '80%'
                     }}>
                     <Text style={{
                         color: "white",
-                        fontSize: 18
+                        fontSize: 18,
+                        textAlign: 'center'
                     }}>Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -55,11 +57,13 @@ const ProfileScreen = ({ navigation }) => {
                         paddingHorizontal: 40,
                         paddingVertical: 10,
                         borderRadius: 10,
-                        marginTop: 10
+                        marginTop: 10,
+                        width: '80%'
                     }}>
                     <Text style={{
                         color: "white",
-                        fontSize: 18
+                        fontSize: 18,
+                        textAlign: 'center'
                     }}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
@@ -100,9 +104,15 @@ const ProfileScreen = ({ navigation }) => {
                 }]}>
                     <Text style={styles.btntextstyle}>Show History</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.5} style={[styles.btnstyle, {
-                    marginTop: 8
-                }]}>
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[styles.btnstyle, {
+                        marginTop: 8
+                    }]}
+                    onPress={()=>{
+                        navigation.navigate('EditProfile')
+                    }}
+                >
                     <Text style={styles.btntextstyle}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
