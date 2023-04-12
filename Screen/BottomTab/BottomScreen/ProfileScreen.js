@@ -17,7 +17,7 @@ const ProfileScreen = ({ navigation }) => {
         return subscriber;
     }, []);
 
-    console.log(user)
+    // console.log(user)
 
     if (initializing) return null;
 
@@ -96,7 +96,9 @@ const ProfileScreen = ({ navigation }) => {
                     }}>Welcome <Text style={{ color: 'red', fontSize: 15 }}>{user.displayName}</Text></Text>
             </View>
             <View style={{ alignItems: "center", marginTop: 30 }}>
-                <TouchableOpacity activeOpacity={0.5} style={styles.btnstyle}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => {
+                    navigation.navigate('AddItem')
+                }} style={styles.btnstyle}>
                     <Text style={styles.btntextstyle}>Add Item</Text>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.5} style={[styles.btnstyle, {
@@ -109,7 +111,7 @@ const ProfileScreen = ({ navigation }) => {
                     style={[styles.btnstyle, {
                         marginTop: 8
                     }]}
-                    onPress={()=>{
+                    onPress={() => {
                         navigation.navigate('EditProfile')
                     }}
                 >

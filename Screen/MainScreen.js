@@ -5,6 +5,8 @@ import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
 import MainBottomTab from './BottomTab/MainBottomTab';
 import EditProfile from './BottomTab/BottomScreen/EditProfile';
+import AddItem from './StackScreen/AddItem';
+import ItemDetails from './StackScreen/ItemDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,17 @@ function MainScreen() {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="AddItem" component={AddItem} />
+            <Stack.Screen name="ItemDetails" component={ItemDetails}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'AUCTION DETAIL',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
         </Stack.Navigator>
     );
 }
