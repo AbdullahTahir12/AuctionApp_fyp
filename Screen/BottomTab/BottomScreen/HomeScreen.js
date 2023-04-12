@@ -1,8 +1,11 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
 import moment, { now } from 'moment';
 import auth from '@react-native-firebase/auth';
+
+const { width, height } = Dimensions.get('screen')
+
 const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [initializing, setInitializing] = useState(true);
@@ -76,20 +79,19 @@ const HomeScreen = ({ navigation }) => {
                   }}>
                   <Image
                     source={{ uri: item.productimage }}
-                    style={{ width: 187, height: 220, resizeMode: 'cover' }}
+                    style={{ width: width / 2.4, height: height/4, resizeMode: 'cover' }}
                   />
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: 'black' }}>{item.title}</Text>
-                  <Text style={{ fontSize: 14, fontWeight: '700' }}>{item.selectedEndDate}</Text>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.selectedEndDate}</Text>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
                     <Text style={{ fontSize: 18, fontWeight: '700', color: 'black' }}>$15</Text>
                     <TouchableOpacity onPress={() => {
                       navigation.navigate('ItemDetails', {
                         item: item,
                         uid: user == null ? 'user_not' : user.uid
                       })
-                      // console.warn(user == null ? 'user_not' : user.uid)
-                    }} style={{ backgroundColor: '#FF4949', paddingHorizontal: 10, borderRadius: 10 }}>
-                      <Text style={{ fontSize: 20, color: 'white' }}>Buy</Text>
+                    }} style={{ backgroundColor: '#FF4949', paddingHorizontal: 15, borderRadius: 10 }}>
+                      <Text style={{ fontSize: 14, color: 'white' }}>Buy</Text>
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>

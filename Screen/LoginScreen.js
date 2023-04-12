@@ -47,6 +47,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder='Enter Email Address'
           onChangeText={(e) => setemail(e)}
           style={styles.textInput}
+          placeholderTextColor={'grey'}
         />
       </View>
       <View style={{ alignItems: "center", marginTop: 10 }}>
@@ -54,6 +55,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder='Enter Password'
           onChangeText={(e) => setpassword(e)}
           style={styles.textInput}
+          placeholderTextColor={'grey'}
         />
       </View>
       <View style={{ marginTop: 10, width: "80%", alignSelf: 'center' }}>

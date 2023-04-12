@@ -98,7 +98,7 @@ const SignUpScreen = ({ navigation }) => {
                   console.log(err)
                 })
               }} style={[styles.btn, { width: "60%" }]}>
-                <Text style={styles.btntext}>Select Profile Image</Text>
+                <Text style={styles.btntext}>Select Image</Text>
               </TouchableOpacity>
               <View style={[styles.sectionStyle, { marginTop: 20 }]}>
                 <TextInput
@@ -106,6 +106,7 @@ const SignUpScreen = ({ navigation }) => {
                   onChangeText={handleChange('name')}
                   placeholder="Name"
                   onBlur={() => setFieldTouched('name')}
+                  placeholderTextColor={'grey'}
                 />
               </View>
               {touched.name && errors.name &&
@@ -117,6 +118,7 @@ const SignUpScreen = ({ navigation }) => {
                   onChangeText={handleChange('email')}
                   placeholder="Enter email address"
                   onBlur={() => setFieldTouched('email')}
+                  placeholderTextColor={'grey'}
                 />
               </View>
               {touched.email && errors.email &&
@@ -128,6 +130,7 @@ const SignUpScreen = ({ navigation }) => {
                   onChangeText={handleChange('password')}
                   placeholder="Enter Passowrd"
                   onBlur={() => setFieldTouched('password')}
+                  placeholderTextColor={'grey'}
                 />
               </View>
               {touched.password && errors.password &&
@@ -139,6 +142,7 @@ const SignUpScreen = ({ navigation }) => {
                   onChangeText={handleChange('confirmPassword')}
                   placeholder="Enter Passowrd Again"
                   onBlur={() => setFieldTouched('confirmPassword')}
+                  placeholderTextColor={'grey'}
                 />
               </View>
               {touched.confirmPassword && errors.confirmPassword &&

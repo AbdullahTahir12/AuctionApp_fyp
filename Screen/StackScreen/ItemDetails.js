@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, FlatList, Button, TextInput, Image, ScrollView, TouchableOpacity, Modal } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Button, TextInput, Image, ScrollView, TouchableOpacity, Modal, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
+const { width, height } = Dimensions.get('screen')
 
 const ItemDetails = ({ route }) => {
     const [data, setdata] = useState('')
@@ -15,6 +16,7 @@ const ItemDetails = ({ route }) => {
     const [user, setUser] = useState();
     const [addbidmodel, setaddbidmodel] = useState(false)
     const [btnstate, setbtnstate] = useState(false)
+    const [uuuid, setuuuid] = useState([])
 
     const AddBid = () => {
         if (user) {
@@ -61,7 +63,8 @@ const ItemDetails = ({ route }) => {
                     if (route.params.uid !== 'user_not') {
                         const uid = route.params.uid;
                         const uuuid = documentSnapshot.data().bids.filter(item => item.key == uid)
-                        if (uuuid.length > 0 && uuuid[0].key !== undefined && uuuid[0].key === uid && uuuid[0].value === max) {
+                        setuuuid(uuuid)
+                        if (uuuid.length > 0 && uuuid[0].key !== undefined && uuuid[0].key === uid) {
                             setbtnstate(true)
                         } else {
                             setbtnstate(false)
@@ -150,69 +153,68 @@ const ItemDetails = ({ route }) => {
 
     const formattedTime = `${days}D ${hours}H ${minutes}M ${remainingSeconds}S`;
     return (
-        <View style={{ backgroundColor: 'white', padding: 20, flex: 1 }}>
-            <View>
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
+            <View style={{ marginTop: 5 }}>
                 <Image
                     source={{ uri: "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg" }}
-                    style={{ width: 358, height: 215, resizeMode: 'contain' }}
+                    style={{ width: width, height: 215, resizeMode: 'contain' }}
                 />
             </View>
-            <View style={{ marginTop: 10, marginLeft: 5 }}>
+            <View style={{ marginTop: 10, marginLeft: 15 }}>
                 <Text style={{ fontSize: 18, color: 'black', }}>{data.title}</Text>
                 <Text style={{ fontSize: 14, color: 'grey', width: '90%', marginTop: 10 }}>{data.description}</Text>
             </View>
-            <Text style={{ marginLeft: 5, fontSize: 18, color: 'black', marginTop: 10 }}>Information Detail</Text>
-            <View style={{ flexDirection: 'row', justifyContent: "space-between", width: '90%', marginLeft: 5, marginTop: 10 }}>
+            <Text style={{ marginLeft: 15, fontSize: 18, color: 'black', marginTop: 10 }}>Information Detail</Text>
+            <View style={{ flexDirection: 'row', justifyContent: "space-between", width: '90%', marginLeft: 15, marginTop: 10 }}>
                 <View>
                     <View>
                         <Text style={{ color: 'black' }}>Highest Bid</Text>
-                        <Text>{max ? max : data.price}</Text>
+                        <Text style={{ color: 'grey' }}>{max ? max : data.price}</Text>
                     </View>
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: 'black' }}>Auction End</Text>
-                        <Text>{formattedTime}</Text>
+                        <Text style={{ color: 'grey' }}>{formattedTime}</Text>
                     </View>
                 </View>
                 <View>
                     <View>
                         <Text style={{ color: 'black' }}>Name</Text>
-                        <Text>Muhammad Shahzaib</Text>
+                        <Text style={{ color: 'grey' }}>Muhammad Shahzaib</Text>
                     </View>
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: 'black' }}>Price</Text>
-                        <Text>{data.price}</Text>
+                        <Text style={{ color: 'grey' }}>{data.price}</Text>
                     </View>
                 </View>
             </View>
-            <Text style={{ marginLeft: 5, fontSize: 18, color: 'black', marginTop: 10 }}>Highest Bids</Text>
-            <ScrollView showsVerticalScrollIndicator={false} style={{ width: '90%', marginLeft: 5, marginTop: 10, paddingBottom: 70 }}>
+            <Text style={{ marginLeft: 15, fontSize: 18, color: 'black', marginTop: 10 }}>Highest Bids</Text>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ width: '90%', marginLeft: 15, marginTop: 10, paddingBottom: 70 }}>
                 {
                     bids && (
                         bids.map((item, index) => {
                             return (
-                                <>
-                                    <View key={index} style={{ flexDirection: 'row', marginTop: 10 }}>
+                                <View key={index} style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <View>
+                                        <Image
+                                            source={{ uri: item.user_image }}
+                                            style={{ width: 51, height: 51, resizeMode: 'contain', borderRadius: 60 }}
+                                        />
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: "center", width: '80%', justifyContent: 'space-between' }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ color: 'grey' }}>{item.user_name}</Text>
+                                            <Text style={{ color: 'grey' }}>{item.bids}</Text>
+                                        </View>
                                         <View>
-                                            <Image
-                                                source={{ uri: item.user_image }}
-                                                style={{ width: 51, height: 51, resizeMode: 'contain', borderRadius: 60 }}
+                                            <FontAwesome5
+                                                name={'arrow-alt-circle-up'}
+                                                color={'red'}
+                                                size={35}
                                             />
                                         </View>
-                                        <View style={{ flexDirection: 'row', alignItems: "center", width: '80%', justifyContent: 'space-between' }}>
-                                            <View style={{ marginLeft: 10 }}>
-                                                <Text>{item.user_name}</Text>
-                                                <Text>{item.bids}</Text>
-                                            </View>
-                                            <View>
-                                                <FontAwesome5
-                                                    name={'arrow-alt-circle-up'}
-                                                    color={'red'}
-                                                    size={35}
-                                                />
-                                            </View>
-                                        </View>
                                     </View>
-                                </>
+                                </View>
+
                             )
                         })
                     )
@@ -241,8 +243,8 @@ const ItemDetails = ({ route }) => {
                     </View>
                 </View>
             </Modal>
-            <View style={{ position: 'absolute', bottom: 0, width: "110%", height: 60, backgroundColor: 'white', borderTopWidth: 1 }}>
-                <TouchableOpacity disabled={btnstate} onPress={() => AddBid()} style={{ width: "90%", backgroundColor: '#FF4949', paddingVertical: 10, alignSelf: 'center', marginTop: 10, borderRadius: 10 }}>
+            <View style={{ position: 'absolute', bottom: 0, width: "100%", height: 60, backgroundColor: 'white', borderTopWidth: 1 }}>
+                <TouchableOpacity disabled={btnstate == true && max == uuuid[0].bids ? true : false} onPress={() => AddBid()} style={{ width: "90%", backgroundColor: btnstate == true && max == uuuid[0].bids ? 'grey' : '#FF4949', paddingVertical: 10, alignSelf: 'center', marginTop: 10, borderRadius: 10 }}>
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 16 }}>Add Bid</Text>
                 </TouchableOpacity>
             </View>

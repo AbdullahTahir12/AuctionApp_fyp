@@ -120,7 +120,7 @@ const AddItem = ({ navigation }) => {
                                 }).catch((err) => {
                                     console.log(err)
                                 })
-                            }} style={[styles.btn, { width: "35%" }]}>
+                            }} style={[styles.btn, { width: "45%" }]}>
                                 <Text style={[styles.btntext, { fontSize: 16 }]}>Select Image</Text>
                             </TouchableOpacity>
                             <View style={[styles.sectionStyle, { marginTop: 20 }]}>
@@ -129,6 +129,7 @@ const AddItem = ({ navigation }) => {
                                     onChangeText={handleChange('title')}
                                     placeholder="Enter Title"
                                     onBlur={() => setFieldTouched('title')}
+                                    placeholderTextColor={'grey'}
                                 />
                             </View>
                             {touched.title && errors.title &&
@@ -140,6 +141,7 @@ const AddItem = ({ navigation }) => {
                                     onChangeText={handleChange('description')}
                                     placeholder="Enter Description"
                                     onBlur={() => setFieldTouched('description')}
+                                    placeholderTextColor={'grey'}
                                 />
                             </View>
                             {touched.description && errors.description &&
@@ -151,6 +153,7 @@ const AddItem = ({ navigation }) => {
                                     onChangeText={handleChange('price')}
                                     placeholder="Enter Price"
                                     onBlur={() => setFieldTouched('price')}
+                                    placeholderTextColor={'grey'}
                                 />
                             </View>
                             {touched.price && errors.price &&
