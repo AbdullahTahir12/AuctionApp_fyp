@@ -1718,6 +1718,11 @@
   resolved "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-17.4.2.tgz"
   integrity sha512-NMjurwTkLs8vsX6C2p5EMKcMsL9WOnC795Z3BIbqI7NGMuxuGx7OfIEbXG03JIOjH+NhX+3XHp+N2OFAEhEbAw==
 
+"@react-native-picker/picker@^2.4.10":
+  version "2.4.10"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.4.10.tgz"
+  integrity sha512-EvAlHmPEPOwvbP6Pjg/gtDV3XJzIjIxr10fXFNlX5r9HeHw582G1Zt2o8FLyB718nOttgj8HYUTGxvhu4N65sQ==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -6276,7 +6281,7 @@ react-native-vector-icons@*, react-native-vector-icons@^9.2.0, "react-native-vec
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@>= 0.30.0", react-native@>=0.40.0, react-native@0.71.5:
+react-native@*, "react-native@>= 0.30.0", react-native@>=0.40.0, react-native@>=0.57, react-native@0.71.5:
   version "0.71.5"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.71.5.tgz"
   integrity sha512-fMptnHXoIPotg7gPYAvjMRnfC6gUSkTJzgaIDQJTY/f5F+g6qph5J1xT9LCuWuNguyQ9dh8b0MZTK5ROvTTV9w==
@@ -6338,7 +6343,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, "react@>= 15.2.1", react@>=16.3.0, react@>=16.8.0, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, "react@>= 15.2.1", react@>=16, react@>=16.3.0, react@>=16.8.0, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

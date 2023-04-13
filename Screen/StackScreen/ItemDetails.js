@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const { width, height } = Dimensions.get('screen')
 
 const ItemDetails = ({ route }) => {
@@ -146,22 +147,73 @@ const ItemDetails = ({ route }) => {
         }
     }
 
+
+    const addtofav = () => {
+        if (user) {
+            if (data.status == 'no') {
+                firestore()
+                    .collection('Item_Data')
+                    .doc(route.params.item.key)
+                    .update({
+                        status: 'yes',
+                        uid: route.params.uid
+                    })
+                    .then(() => {
+                        console.log('Add To Favorites');
+                    });
+            } else {
+                firestore()
+                    .collection('Item_Data')
+                    .doc(route.params.item.key)
+                    .update({
+                        status: 'no',
+                        uid: route.params.uid
+                    })
+                    .then(() => {
+                        console.log('Remove From Favorites');
+                    });
+            }
+        } else {
+            alert('Please Login')
+        }
+        // console.warn(route.params.item.key)
+
+    }
+
     const days = Math.floor(timeRemaining / (24 * 60 * 60));
     const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
     const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
     const remainingSeconds = Math.floor(timeRemaining % 60);
 
     const formattedTime = `${days}D ${hours}H ${minutes}M ${remainingSeconds}S`;
+
+
+
+
+
+
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={{ marginTop: 5 }}>
                 <Image
-                    source={{ uri: "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg" }}
+                    source={{ uri: route.params.item.productimage }}
                     style={{ width: width, height: 215, resizeMode: 'contain' }}
                 />
             </View>
             <View style={{ marginTop: 10, marginLeft: 15 }}>
-                <Text style={{ fontSize: 18, color: 'black', }}>{data.title}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                    <Text style={{ fontSize: 18, color: 'black', }}>{data.title}</Text>
+                    <TouchableOpacity onPress={() => addtofav()}>
+                        <MaterialIcons
+                            name={'favorite'}
+                            color={data.status == 'yes' ? 'red' : 'grey'}
+                            size={25}
+                            style={{
+                                marginRight: 40
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <Text style={{ fontSize: 14, color: 'grey', width: '90%', marginTop: 10 }}>{data.description}</Text>
             </View>
             <Text style={{ marginLeft: 15, fontSize: 18, color: 'black', marginTop: 10 }}>Information Detail</Text>
@@ -179,7 +231,7 @@ const ItemDetails = ({ route }) => {
                 <View>
                     <View>
                         <Text style={{ color: 'black' }}>Name</Text>
-                        <Text style={{ color: 'grey' }}>Muhammad Shahzaib</Text>
+                        <Text style={{ color: 'grey' }}>{route.params.item.user_add_category}</Text>
                     </View>
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: 'black' }}>Price</Text>

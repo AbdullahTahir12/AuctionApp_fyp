@@ -10,6 +10,7 @@ const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
   useEffect(() => {
     const subscriber = firestore()
       .collection('Item_Data')
@@ -43,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={{ padding: 10, marginLeft: 10 }}>
         <FlatList
-          data={data}
+          data={data.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))}
           ListHeaderComponent={
             <View style={{ marginRight: 20 }}>
               <Text style={styles.headertxt}>Auction App</Text>
@@ -60,6 +61,7 @@ const HomeScreen = ({ navigation }) => {
                 <TextInput
                   placeholder='Find Product'
                   style={styles.textInput}
+                  onChangeText={(e) => setSearchQuery(e)}
                 />
               </View>
             </View>
@@ -76,10 +78,11 @@ const HomeScreen = ({ navigation }) => {
                       uid: user == null ? 'user_not' : user.uid
                     })
                     // console.warn(user == null ? 'user_not' : user.uid)
-                  }}>
+                  }}
+                >
                   <Image
                     source={{ uri: item.productimage }}
-                    style={{ width: width / 2.4, height: height/4, resizeMode: 'cover' }}
+                    style={{ width: width / 2.4, height: height / 4, resizeMode: 'cover' }}
                   />
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.title}</Text>
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.selectedEndDate}</Text>

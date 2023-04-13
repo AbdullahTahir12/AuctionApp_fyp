@@ -27,7 +27,7 @@ const SignUpScreen = ({ navigation }) => {
               try {
                 const uploadUri = image;
                 let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-                const storageRef = storage().ref(`product_image/${filename}`);
+                const storageRef = storage().ref(`User_Image/${filename}`);
                 const task = storageRef.putFile(uploadUri);
                 await task;
                 const url = await storageRef.getDownloadURL();

@@ -97,7 +97,9 @@ const ProfileScreen = ({ navigation }) => {
             </View>
             <View style={{ alignItems: "center", marginTop: 30 }}>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {
-                    navigation.navigate('AddItem')
+                    navigation.navigate('AddItem', {
+                        user_name: user.displayName
+                    })
                 }} style={styles.btnstyle}>
                     <Text style={styles.btntextstyle}>Add Item</Text>
                 </TouchableOpacity>
