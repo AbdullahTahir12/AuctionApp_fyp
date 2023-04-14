@@ -3,42 +3,52 @@ import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const FavouriteScreen = ({navigation}) => {
+const FavouriteScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
 
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return () => subscriber();
+  }, []);
+
   function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
+    try {
+      setUser(user);
+      if (initializing) setInitializing(false);
+    } catch (error) {
+      // Handle error
+      console.error('Error in onAuthStateChanged:', error);
+    }
   }
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
-
-
-  useEffect(() => {
     if (!initializing && user && user.uid) {
-      const subscriber = firestore()
-        .collection('Item_Data')
-        .where('uid', '==', user.uid)
-        .where('status', '==', 'yes')
-        .onSnapshot(querySnapshot => {
-          const users = [];
-          querySnapshot.forEach(documentSnapshot => {
-            users.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
+      try {
+        const subscriber = firestore()
+          .collection('Item_Data')
+          .where('uid', '==', user.uid)
+          .where('status', '==', 'yes')
+          .onSnapshot(querySnapshot => {
+            const users = [];
+            querySnapshot.forEach(documentSnapshot => {
+              users.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
             });
+            setData(users);
           });
-          setData(users);
-        });
 
-      return () => subscriber();
+        return () => subscriber();
+      } catch (error) {
+        // Handle error
+        console.error('Error in Firestore query:', error);
+      }
     }
   }, [initializing, user]);
+  
   return (
     <View style={{ flex: 1 }}>
       <FlatList

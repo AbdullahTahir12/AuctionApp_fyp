@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'reac
 import React, { useState, useEffect } from 'react'
 import auth from '@react-native-firebase/auth';
 
-const image = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg"
+const image1 = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg"
 const ProfileScreen = ({ navigation }) => {
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
@@ -76,15 +76,27 @@ const ProfileScreen = ({ navigation }) => {
             justifyContent: "center",
         }}>
             <View style={{ alignItems: "center", marginTop: 20 }}>
-                <Image
-                    source={{ uri: user.photoURL }}
-                    style={{
-                        height: 120,
-                        width: 120,
-                        resizeMode: 'contain',
-                        borderRadius: 80,
-                    }}
-                />
+                {user && user.photoURL ? (
+                    <Image
+                        source={{ uri: user.photoURL ? user.photoURL : image1 }}
+                        style={{
+                            height: 120,
+                            width: 120,
+                            resizeMode: 'contain',
+                            borderRadius: 80,
+                        }}
+                    />
+                ) : (
+                    <Image
+                        source={{ uri: image1 }}
+                        style={{
+                            height: 120,
+                            width: 120,
+                            resizeMode: 'contain',
+                            borderRadius: 80,
+                        }}
+                    />
+                )}
             </View>
             <View>
                 <Text
@@ -108,7 +120,7 @@ const ProfileScreen = ({ navigation }) => {
                 }]}>
                     <Text style={styles.btntextstyle}>Show History</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     activeOpacity={0.5}
                     style={[styles.btnstyle, {
                         marginTop: 8
@@ -118,7 +130,7 @@ const ProfileScreen = ({ navigation }) => {
                     }}
                 >
                     <Text style={styles.btntextstyle}>Edit Profile</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                     activeOpacity={0.5}
                     style={[styles.btnstyle, {

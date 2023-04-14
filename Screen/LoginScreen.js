@@ -59,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
       <View style={{ marginTop: 10, width: "80%", alignSelf: 'center' }}>
-        <Text style={{ textAlign: "right", color: 'black' }}>Forgot Password ?</Text>
+        <Text onPress={() => navigation.navigate('ForgetPasswordScreen')} style={{ textAlign: "right", color: 'black' }}>Forgot Password ?</Text>
       </View>
       <View style={{ marginTop: 10 }}>
         <TouchableOpacity
@@ -72,6 +72,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={{ marginTop: 10 }}>
         <TouchableOpacity
           style={styles.btn1}
+          onPress={() => navigation.navigate('SignUp')}
         >
           <Text style={styles.btntext1}>Don't Have Account? <Text style={{ color: '#FF4949' }}>Sign Up</Text></Text>
         </TouchableOpacity>

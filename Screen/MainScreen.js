@@ -7,6 +7,7 @@ import MainBottomTab from './BottomTab/MainBottomTab';
 import EditProfile from './BottomTab/BottomScreen/EditProfile';
 import AddItem from './StackScreen/AddItem';
 import ItemDetails from './StackScreen/ItemDetails';
+import ForgetPasswordScreen from './StackScreen/ForgetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ function MainScreen() {
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="AddItem" component={AddItem} />
+            <Stack.Screen name="ForgetPasswordScreen" component={ForgetPasswordScreen} />
             <Stack.Screen name="ItemDetails" component={ItemDetails}
                 options={{
                     headerShown: true,

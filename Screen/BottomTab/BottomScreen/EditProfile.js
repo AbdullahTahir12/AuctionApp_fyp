@@ -61,13 +61,20 @@ const EditProfile = ({ navigation }) => {
                     {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting, setFieldValue }) => (
                         <ScrollView style={styles.container1}>
                             <View style={{ alignItems: "center", height: 80, justifyContent: 'center' }}>
-                                <Text style={{ color: '#FF4949', fontSize: 25 }}>Create Account</Text>
+                                <Text style={{ color: '#FF4949', fontSize: 25 }}>Edit Profile</Text>
                             </View>
                             <View style={{ alignItems: "center" }}>
-                                <Image
-                                    source={{ uri: user.photoURL }}
-                                    style={styles.image}
-                                />
+                                {user && user.photoURL ? (
+                                    <Image
+                                        source={{ uri: user.photoURL ? user.photoURL : image1 }}
+                                        style={styles.image}
+                                    />
+                                ) : (
+                                    <Image
+                                        source={{ uri: image1 }}
+                                        style={styles.image}
+                                    />
+                                )}
                             </View>
                             <TouchableOpacity onPress={() => {
                                 ImagePicker.openPicker({
@@ -149,13 +156,6 @@ const EditProfile = ({ navigation }) => {
                                         </TouchableOpacity>
                                     }
                                 </View>
-                            </View>
-                            <View style={{ marginTop: 10 }}>
-                                <TouchableOpacity
-                                    style={styles.btn1}
-                                >
-                                    <Text style={styles.btntext1}>Already Have Account? <Text style={{ color: '#FF4949' }}>Login Now</Text></Text>
-                                </TouchableOpacity>
                             </View>
                         </ScrollView>
                     )}
