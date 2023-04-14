@@ -8,6 +8,7 @@ import EditProfile from './BottomTab/BottomScreen/EditProfile';
 import AddItem from './StackScreen/AddItem';
 import ItemDetails from './StackScreen/ItemDetails';
 import ForgetPasswordScreen from './StackScreen/ForgetPasswordScreen';
+import SplashScreen from './SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ function MainScreen() {
         <Stack.Navigator screenOptions={{
             headerShown: false
         }}>
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
             <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />

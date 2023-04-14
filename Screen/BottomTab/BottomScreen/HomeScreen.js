@@ -14,6 +14,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const subscriber = firestore()
       .collection('Item_Data')
+      .limit(10)
       .onSnapshot(querySnapshot => {
         const users = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -87,7 +88,7 @@ const HomeScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.title}</Text>
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.selectedEndDate}</Text>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                    <Text style={{ fontSize: 18, fontWeight: '700', color: 'black' }}>$15</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '700', color: 'black' }}>{item.price}</Text>
                     <TouchableOpacity onPress={() => {
                       navigation.navigate('ItemDetails', {
                         item: item,
