@@ -5,23 +5,31 @@ import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { CardField, useStripe, createToken } from '@stripe/stripe-react-native';
 const { width, height } = Dimensions.get('screen')
 
-const ItemDetails = ({ route }) => {
+const ItemDetails = ({ route, navigation }) => {
     const [data, setdata] = useState('')
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [bids, setbids] = useState([])
-    const [bidValue, setbidValue] = useState('')
     const [max, setmax] = useState(0)
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
-    const [addbidmodel, setaddbidmodel] = useState(false)
     const [btnstate, setbtnstate] = useState(false)
     const [uuuid, setuuuid] = useState([])
+    const [add_to_favourite, setadd_to_favourite] = useState(false)
+    const [favorite_details, setfavorite_details] = useState([])
 
     const AddBid = () => {
         if (user) {
-            setaddbidmodel(true)
+            navigation.navigate('PaymentScreen', {
+                doc_key: route.params.item.key,
+                user_name: user.displayName,
+                user_image: user.photoURL,
+                key: user.uid,
+                price: data.price,
+                max: max
+            })
         } else {
             alert('Please Login to Place Bid')
         }
@@ -50,8 +58,23 @@ const ItemDetails = ({ route }) => {
             .doc(route.params.item.key)
             .onSnapshot(documentSnapshot => {
                 setdata(documentSnapshot.data());
+
+                if (documentSnapshot.data().favourite === undefined) {
+                    setadd_to_favourite(false)
+                } else {
+                    const favourite = documentSnapshot.data().favourite.filter(item => item.user_key === route.params.uid)
+                    if (favourite.length > 0) {
+                        setadd_to_favourite(true)
+                        setfavorite_details(favourite)
+                    } else {
+                        setadd_to_favourite(false)
+                        setfavorite_details([])
+                    }
+                }
+
                 if (documentSnapshot.data().bids === undefined) {
                     setbids([]);
+                    setmax(data.price);
                 } else {
                     const array = documentSnapshot.data().bids
                     array.sort((a, b) => b.bids - a.bids);
@@ -90,95 +113,57 @@ const ItemDetails = ({ route }) => {
         return () => clearInterval(interval);
     }, [timeRemaining]);
 
-    const addbidsvaluepress = async () => {
-        if (bidValue > route.params.item.price && !max) {
-            const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
-
-            bidsRef.get().then((doc) => {
-                if (doc.exists) {
-                    const bidsRefList = doc.data().bids || [];
-                    const updatedbidsList = [...bidsRefList, {
-                        bids: bidValue,
-                        user_name: user.displayName,
-                        user_image: user.photoURL,
-                        key: user.uid
-                    }];
-                    bidsRef.update({ bids: updatedbidsList })
-                        .then(() => {
-                            setaddbidmodel(false)
-                        })
-                        .catch((error) => {
-                            console.error("Error updating user: ", error);
-                        });
-                } else {
-                    console.error("User document not found");
-                }
-            }).catch((error) => {
-                console.error("Error getting user document: ", error);
-            });
-        } else if (bidValue > max && max !== 0) {
-            const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
-
-            bidsRef.get().then((doc) => {
-                if (doc.exists) {
-                    const bidsRefList = doc.data().bids || [];
-                    const updatedbidsList = [...bidsRefList, {
-                        bids: bidValue,
-                        user_name: user.displayName,
-                        user_image: user.photoURL,
-                        key: user.uid
-                    }];
-                    bidsRef.update({ bids: updatedbidsList })
-                        .then(() => {
-                            setaddbidmodel(false)
-                        })
-                        .catch((error) => {
-                            console.error("Error updating user: ", error);
-                        });
-                } else {
-                    console.error("User document not found");
-                }
-            }).catch((error) => {
-                console.error("Error getting user document: ", error);
-            });
-        }
-        else {
-            alert("Bids Value is Lower than max Value")
-        }
-    }
-
 
     const addtofav = () => {
         if (user) {
-            if (data.status == 'no') {
-                firestore()
-                    .collection('Item_Data')
-                    .doc(route.params.item.key)
-                    .update({
-                        status: 'yes',
-                        uid: route.params.uid
-                    })
-                    .then(() => {
-                        console.log('Add To Favorites');
-                    });
+            // console.warn(favorite_details)
+            if (favorite_details == 0) {
+                const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
+                bidsRef.get().then((doc) => {
+                    if (doc.exists) {
+                        const bidsRefList = doc.data().bids || [];
+                        const updatedbidsList = [...bidsRefList, {
+                            user_key: route.params.uid,
+                            user_name: user.displayName,
+                            status: "yes"
+                        }];
+                        bidsRef.update({ favourite: updatedbidsList })
+                            .then(() => {
+                                console.warn("Favourites updated")
+                            })
+                            .catch((error) => {
+                                console.error("Error updating Bids: ", error);
+                            });
+                    } else {
+                        console.error("User document not found");
+                    }
+                }).catch((error) => {
+                    console.error("Error getting user document: ", error);
+                });
             } else {
-                firestore()
-                    .collection('Item_Data')
-                    .doc(route.params.item.key)
-                    .update({
-                        status: 'no',
-                        uid: route.params.uid
-                    })
-                    .then(() => {
-                        console.log('Remove From Favorites');
-                    });
+                const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
+
+                bidsRef.get().then((doc) => {
+                    const favouriteArray = doc.data().favourite;
+                    if (favouriteArray) {
+                        bidsRef.update({
+                            favourite: firestore.FieldValue.arrayRemove(favouriteArray[0])
+                        }).then(() => {
+                            console.log("Array index successfully removed");
+                        }).catch((error) => {
+                            console.error("Error removing array index: ", error);
+                        });
+                    }
+                }).catch((error) => {
+                    console.error("Error getting document:", error);
+                });
             }
         } else {
             alert('Please Login')
         }
-        // console.warn(route.params.item.key)
 
     }
+
 
     const days = Math.floor(timeRemaining / (24 * 60 * 60));
     const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
@@ -186,10 +171,6 @@ const ItemDetails = ({ route }) => {
     const remainingSeconds = Math.floor(timeRemaining % 60);
 
     const formattedTime = `${days}D ${hours}H ${minutes}M ${remainingSeconds}S`;
-
-
-
-
 
 
     return (
@@ -206,7 +187,7 @@ const ItemDetails = ({ route }) => {
                     <TouchableOpacity onPress={() => addtofav()}>
                         <MaterialIcons
                             name={'favorite'}
-                            color={data.status == 'yes' ? 'red' : 'grey'}
+                            color={add_to_favourite ? 'red' : 'grey'}
                             size={25}
                             style={{
                                 marginRight: 40
@@ -272,7 +253,7 @@ const ItemDetails = ({ route }) => {
                     )
                 }
             </ScrollView>
-            <Modal
+            {/* <Modal
                 animationType="slide"
                 transparent={true}
                 onRequestClose={() => setaddbidmodel(false)}
@@ -294,7 +275,7 @@ const ItemDetails = ({ route }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
             <View style={{ position: 'absolute', bottom: 0, width: "100%", height: 60, backgroundColor: 'white', borderTopWidth: 1 }}>
                 <TouchableOpacity disabled={btnstate == true && max == uuuid[0].bids ? true : false} onPress={() => AddBid()} style={{ width: "90%", backgroundColor: btnstate == true && max == uuuid[0].bids ? 'grey' : '#FF4949', paddingVertical: 10, alignSelf: 'center', marginTop: 10, borderRadius: 10 }}>
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 16 }}>Add Bid</Text>

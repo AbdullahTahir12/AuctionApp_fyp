@@ -9,6 +9,7 @@ import AddItem from './StackScreen/AddItem';
 import ItemDetails from './StackScreen/ItemDetails';
 import ForgetPasswordScreen from './StackScreen/ForgetPasswordScreen';
 import SplashScreen from './SplashScreen';
+import PaymentScreen from './StackScreen/PaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,7 @@ function MainScreen() {
         <Stack.Navigator screenOptions={{
             headerShown: false
         }}>
-            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
             <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -28,6 +29,16 @@ function MainScreen() {
                 options={{
                     headerShown: true,
                     headerTitle: 'AUCTION DETAIL',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="PaymentScreen" component={PaymentScreen}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Payment',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         color: '#FF5862'
