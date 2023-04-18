@@ -18,7 +18,7 @@ const ItemDetails = ({ route, navigation }) => {
     const [btnstate, setbtnstate] = useState(false)
     const [uuuid, setuuuid] = useState([])
     const [add_to_favourite, setadd_to_favourite] = useState(false)
-    const [favorite_details, setfavorite_details] = useState([])
+    const [favorite_details, setfavorite_details] = useState(1)
 
     const AddBid = () => {
         if (user) {
@@ -62,14 +62,29 @@ const ItemDetails = ({ route, navigation }) => {
                 if (documentSnapshot.data().favourite === undefined) {
                     setadd_to_favourite(false)
                 } else {
-                    const favourite = documentSnapshot.data().favourite.filter(item => item.user_key === route.params.uid)
-                    if (favourite.length > 0) {
+                    const favourite = documentSnapshot.data().favourite;
+                    const index = favourite.findIndex(item => item.user_key === route.params.uid);
+                    // console.warn(index)
+                    if (index !== -1) {
+                        const item = favourite[index];
                         setadd_to_favourite(true)
-                        setfavorite_details(favourite)
+                        setfavorite_details(index)
+                        console.warn(index)
                     } else {
                         setadd_to_favourite(false)
-                        setfavorite_details([])
+                        setfavorite_details(0)
+                        console.warn('no')
+                        setfavorite_details(1)
                     }
+                    // const favourite = documentSnapshot.data().favourite.filter(item => item.user_key === route.params.uid)
+                    // console.warn(favourite)
+                    // if (favourite.length > 0) {
+                    //     setadd_to_favourite(true)
+                    //     setfavorite_details(favourite)
+                    // } else {
+                    //     setadd_to_favourite(false)
+                    //     setfavorite_details([])
+                    // }
                 }
 
                 if (documentSnapshot.data().bids === undefined) {
@@ -117,11 +132,11 @@ const ItemDetails = ({ route, navigation }) => {
     const addtofav = () => {
         if (user) {
             // console.warn(favorite_details)
-            if (favorite_details == 0) {
+            if (favorite_details == 1) {
                 const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
                 bidsRef.get().then((doc) => {
                     if (doc.exists) {
-                        const bidsRefList = doc.data().bids || [];
+                        const bidsRefList = doc.data().favourite || [];
                         const updatedbidsList = [...bidsRefList, {
                             user_key: route.params.uid,
                             user_name: user.displayName,
@@ -147,7 +162,7 @@ const ItemDetails = ({ route, navigation }) => {
                     const favouriteArray = doc.data().favourite;
                     if (favouriteArray) {
                         bidsRef.update({
-                            favourite: firestore.FieldValue.arrayRemove(favouriteArray[0])
+                            favourite: firestore.FieldValue.arrayRemove(favouriteArray[favorite_details])
                         }).then(() => {
                             console.log("Array index successfully removed");
                         }).catch((error) => {
