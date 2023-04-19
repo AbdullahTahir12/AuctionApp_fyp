@@ -8,6 +8,7 @@ import storage from '@react-native-firebase/storage';
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import { Picker } from '@react-native-picker/picker';
+import auth from '@react-native-firebase/auth';
 
 const image1 = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg"
 
@@ -18,6 +19,23 @@ const AddItem = ({ navigation, route }) => {
     const minDate = new Date(2006, 6, 3);
     const maxDate = new Date(2028, 6, 3);
     const [second_model, setsecond_model] = useState(false)
+    const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return () => subscriber();
+    }, []);
+
+    function onAuthStateChanged(user) {
+        try {
+            setUser(user);
+            if (initializing) setInitializing(false);
+        } catch (error) {
+            // Handle error
+            console.error('Error in onAuthStateChanged:', error);
+        }
+    }
 
     function onDateChange(date, type) {
         if (type === 'END_DATE') {
@@ -28,7 +46,7 @@ const AddItem = ({ navigation, route }) => {
         }
     }
 
-    // console.warn(route.params.user_name)
+    // console.warn(user.uid)
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -62,7 +80,8 @@ const AddItem = ({ navigation, route }) => {
                                     status: 'no',
                                     category_type: values.category_type,
                                     user_add_category: route.params.user_name,
-                                    winning_person_key: ''
+                                    winning_person_key: '',
+                                    user_added_key: user.uid
                                 })
                                 .then(() => {
                                     console.log('User added!');
@@ -231,7 +250,15 @@ const AddItem = ({ navigation, route }) => {
                                         </TouchableOpacity>
 
                                         <TouchableOpacity
-                                            onPress={() => setsecond_model(false)}
+                                            onPress={() => {
+                                                if (selectedStartDate == null) {
+                                                    alert("Please select a start date")
+                                                } else if (selectedEndDate == null) {
+                                                    alert("Please select a end date")
+                                                } else {
+                                                    setsecond_model(false)
+                                                }
+                                            }}
                                             style={{
                                                 backgroundColor: '#007066',
                                                 paddingHorizontal: 55,

@@ -32,7 +32,7 @@ const MyItem = () => {
                 // console.warn(user.uid)
                 const subscriber = firestore()
                     .collection('Item_Data')
-                    .where('uid', '==', user.uid)
+                    .where('user_added_key', '==', user.uid)
                     .onSnapshot(querySnapshot => {
                         const users = [];
                         querySnapshot.forEach(documentSnapshot => {

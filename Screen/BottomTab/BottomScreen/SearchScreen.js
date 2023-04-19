@@ -106,6 +106,9 @@ const SearchScreen = ({ navigation }) => {
 
       <View>
         <FlatList
+          contentContainerStyle={{
+            paddingBottom: 150
+          }}
           data={data.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))}
           numColumns={2}
           ListEmptyComponent={

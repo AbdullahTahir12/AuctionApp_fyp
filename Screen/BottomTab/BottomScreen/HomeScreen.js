@@ -14,6 +14,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const subscriber = firestore()
       .collection('Item_Data')
+      .where('status', '==', 'no')
       .limit(10)
       .onSnapshot(querySnapshot => {
         const users = [];

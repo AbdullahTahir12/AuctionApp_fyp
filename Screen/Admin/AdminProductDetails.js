@@ -123,7 +123,7 @@ const ItemDetails = ({ route, navigation }) => {
                             navigation.navigate('AdminAddItem', {
                                 data: data,
                                 type: 'edit',
-                                key:route.params.key
+                                key: route.params.key
                             })
                         }}>
                             <FontAwesome5
@@ -142,9 +142,10 @@ const ItemDetails = ({ route, navigation }) => {
                                 [
                                     {
                                         text: "Confirm", onPress: () => {
+                                            // console.warn(route.params.key)
                                             firestore()
                                                 .collection('Item_Data')
-                                                .doc(item.key)
+                                                .doc(route.params.key)
                                                 .delete()
                                                 .then(() => {
                                                     console.log('Item deleted');
@@ -222,17 +223,7 @@ const ItemDetails = ({ route, navigation }) => {
                                         </View>
                                         <View>
                                             <TouchableOpacity onPress={() => {
-                                                // const itemRef = firestore().collection('Item_Data').doc(item.index);
-                                                // console.warn(itemRef)
-                                                // // console.warn(item)
-                                                // firestore().collection('Item_Data').doc(route.params.key).update({
-                                                //     bids: firestore.FieldValue.delete(),
-                                                // }).then(()=>{
-                                                //     console.warn("Item Delete Success")
-                                                // }).catch((err)=>console.warn(err))
                                                 const itemRef = firestore().collection('Item_Data').doc(route.params.key);
-
-                                                // Use the arrayRemove() method to remove the document at index 1 from the bids array
                                                 itemRef.update({
                                                     bids: firestore.FieldValue.arrayRemove({
                                                         bids:

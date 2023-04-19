@@ -16,7 +16,9 @@ const AdminAddItem = ({ navigation, route }) => {
     const [changeimage, setchangeimage] = useState('');
     const [type, settype] = useState('add');
     const [selectedStartDate, setselectedStartDate] = useState(null);
+    const [selectedStartDatechange, setselectedStartDatechange] = useState(false);
     const [selectedEndDate, setselectedEndDate] = useState(null);
+    const [selectedEndDatechange, setselectedEndDatechange] = useState(false);
     const minDate = new Date(2006, 6, 3);
     const maxDate = new Date(2028, 6, 3);
     const [second_model, setsecond_model] = useState(false)
@@ -25,9 +27,11 @@ const AdminAddItem = ({ navigation, route }) => {
     function onDateChange(date, type) {
         if (type === 'END_DATE') {
             setselectedEndDate(date)
+            setselectedEndDatechange(true)
         } else {
             setselectedEndDate(null)
             setselectedStartDate(date)
+            setselectedStartDatechange(true)
         }
     }
 
@@ -39,6 +43,7 @@ const AdminAddItem = ({ navigation, route }) => {
             setselectedStartDate(route.params.data.selectedStartDate)
             setselectedEndDate(route.params.data.selectedEndDate)
             setproductimage(route.params.data.productimage)
+            settype('edit')
         } else {
             settype('add')
         }
@@ -49,7 +54,7 @@ const AdminAddItem = ({ navigation, route }) => {
             <Formik
                 // enableReinitialize={true}
                 initialValues={{
-                    title: route.params && type == "add" ? route.params.data.title : '',
+                    title: route.params ? route.params.data.title : '',
                     description: route.params ? route.params.data.description : '',
                     price: route.params ? route.params.data.price : '',
                     category_type: route.params ? route.params.data.category_type : ''
@@ -60,6 +65,7 @@ const AdminAddItem = ({ navigation, route }) => {
                     } else {
                         if (changeimage == 'changed' && type == 'add') {
                             try {
+                                // console.warn("Added Form")
                                 const uploadUri = productimage;
                                 let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
                                 const storageRef = storage().ref(`Item_Images/${filename}`);
@@ -67,9 +73,8 @@ const AdminAddItem = ({ navigation, route }) => {
                                 await task;
                                 const url = await storageRef.getDownloadURL();
                                 firestore()
-                                    .collection('Item_Data')
-                                    .doc(route.params.key)
-                                    .update({
+                                    .collection("Item_Data")
+                                    .add({
                                         title: values.title,
                                         description: values.description,
                                         price: values.price,
@@ -82,8 +87,11 @@ const AdminAddItem = ({ navigation, route }) => {
                                         winning_person_key: ''
                                     })
                                     .then(() => {
-                                        console.log('User updated!');
-                                    });
+                                        console.log('User added!');
+                                    }).catch((err) => {
+                                        console.log(err)
+                                    })
+                                navigation.goBack();
 
                             } catch (error) {
                                 console.log('Error creating user: ', error);
@@ -91,6 +99,7 @@ const AdminAddItem = ({ navigation, route }) => {
                             }
                         } else {
                             try {
+                                // console.warn(selectedStartDate)
                                 firestore()
                                     .collection('Item_Data')
                                     .doc(route.params.key)
@@ -98,13 +107,13 @@ const AdminAddItem = ({ navigation, route }) => {
                                         title: values.title,
                                         description: values.description,
                                         price: values.price,
-                                        selectedStartDate: selectedStartDate,
-                                        selectedEndDate: selectedEndDate,
-                                        productimage: url,
+                                        selectedStartDate: selectedStartDatechange === false ? selectedStartDate : moment(selectedStartDate).format('YYYY-MM-DD, 00:00:00'),
+                                        selectedEndDate: selectedEndDatechange === false ? selectedEndDate : moment(selectedEndDate).format('YYYY-MM-DD, 23:59:59'),
+                                        productimage: productimage,
                                         status: 'no',
                                         category_type: values.category_type,
                                         user_add_category: "Admin",
-                                        winning_person_key: ''
+                                        winning_person_key: '',
                                     })
                                     .then(() => {
                                         console.log('User updated!');
@@ -272,7 +281,17 @@ const AdminAddItem = ({ navigation, route }) => {
                                         </TouchableOpacity>
 
                                         <TouchableOpacity
-                                            onPress={() => setsecond_model(false)}
+                                            onPress={() => {
+                                                if (selectedStartDatechange === false) {
+                                                    alert('Please select a start date')
+                                                } else if (selectedEndDatechange == false) {
+                                                    alert('Please select a end date')
+                                                } else {
+                                                    setsecond_model(false)
+                                                }
+
+                                                // setsecond_model(false)
+                                            }}
                                             style={{
                                                 backgroundColor: '#007066',
                                                 paddingHorizontal: 55,
