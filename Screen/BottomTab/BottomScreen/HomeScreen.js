@@ -95,7 +95,10 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={{ fontSize: 18, fontWeight: '700', color: 'black' }}>{item.price}</Text>
                     <TouchableOpacity onPress={() => {
                       navigation.navigate('ItemDetails', {
-                        item: item,
+                        key: item.key,
+                        selectedEndDate: item.selectedEndDate,
+                        productimage: item.productimage,
+                        user_add_category: item.user_add_category,
                         uid: user == null ? 'user_not' : user.uid
                       })
                     }} style={{ backgroundColor: '#FF4949', paddingHorizontal: 15, borderRadius: 10 }}>

@@ -14,6 +14,9 @@ import ShowHistoryScreen from './StackScreen/ShowHistoryScreen';
 import MyItem from './StackScreen/MyItem';
 import WinningItem from './StackScreen/WinningItem';
 import ShowProfileOption from './StackScreen/ShowProfileOption';
+import MainAdminScreen from './Admin/MainAdminScreen';
+import AdminAddItem from './Admin/AdminAddItem';
+import AdminProductDetails from './Admin/AdminProductDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +26,37 @@ function MainScreen() {
             headerShown: false
         }}>
             {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
+            {/* Admin Panel Screen */}
+            <Stack.Screen name="MainAdminScreen" component={MainAdminScreen}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Admin Panel',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="AdminAddItem" component={AdminAddItem}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Admin Add Item',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="AdminProductDetails" component={AdminProductDetails}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Admin Product Details',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
             <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -98,6 +132,7 @@ function MainScreen() {
                     }
                 }}
             />
+
         </Stack.Navigator>
     );
 }

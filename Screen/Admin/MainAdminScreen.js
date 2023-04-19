@@ -5,12 +5,10 @@ import auth from '@react-native-firebase/auth';
 
 const { width, height } = Dimensions.get('screen')
 
-const SearchScreen = ({ navigation }) => {
+const MainAdminScreen = ({ navigation }) => {
   const [active, setActive] = useState(1)
   const [active_category_type, setActive_category_type] = useState('Electrical')
   const [data, setData] = useState([]);
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
@@ -40,18 +38,17 @@ const SearchScreen = ({ navigation }) => {
     return () => subscriber();
   }, [active_category_type]);
 
-
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: 'lightgrey' }}>
+      <View style={{ marginTop: 10, marginHorizontal: 13, alignItems: "flex-end" }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('AdminAddItem')
+          }}
+          style={{ width: "45%", backgroundColor: '#FF4949', padding: 5, borderRadius: 10 }}>
+          <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Add An Item</Text>
+        </TouchableOpacity>
+      </View>
       <View style={{ alignItems: 'center', marginTop: 10 }}>
         <TextInput
           placeholder='Find the best auctions'
@@ -119,12 +116,11 @@ const SearchScreen = ({ navigation }) => {
               <View key={index} style={{ width: "49%", height: 308, marginTop: 10, alignItems: 'flex-start', padding: 15 }}>
                 <TouchableOpacity activeOpacity={0.3}
                   onPress={() => {
-                    navigation.navigate('ItemDetails', {
+                    navigation.navigate('AdminProductDetails', {
                       key: item.key,
                       selectedEndDate: item.selectedEndDate,
                       productimage: item.productimage,
                       user_add_category: item.user_add_category,
-                      uid: user == null ? 'user_not' : user.uid
                     })
                   }}
                 >
@@ -134,19 +130,8 @@ const SearchScreen = ({ navigation }) => {
                   />
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.title}</Text>
                   <Text style={{ fontSize: 14, fontWeight: '700', color: 'black', marginTop: 5 }}>{item.selectedEndDate}</Text>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <View style={{ flexDirection: 'row', marginTop: 5 }}>
                     <Text style={{ fontSize: 18, fontWeight: '700', color: 'black' }}>{item.price}</Text>
-                    <TouchableOpacity onPress={() => {
-                      navigation.navigate('ItemDetails', {
-                        key: item.key,
-                        selectedEndDate: item.selectedEndDate,
-                        productimage: item.productimage,
-                        user_add_category: item.user_add_category,
-                        uid: user == null ? 'user_not' : user.uid
-                      })
-                    }} style={{ backgroundColor: '#FF4949', paddingHorizontal: 15, borderRadius: 10 }}>
-                      <Text style={{ fontSize: 14, color: 'white' }}>Buy</Text>
-                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -160,6 +145,6 @@ const SearchScreen = ({ navigation }) => {
   )
 }
 
-export default SearchScreen
+export default MainAdminScreen
 
 const styles = StyleSheet.create({})
