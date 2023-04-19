@@ -10,6 +10,9 @@ import ItemDetails from './StackScreen/ItemDetails';
 import ForgetPasswordScreen from './StackScreen/ForgetPasswordScreen';
 import SplashScreen from './SplashScreen';
 import PaymentScreen from './StackScreen/PaymentScreen';
+import ShowHistoryScreen from './StackScreen/ShowHistoryScreen';
+import MyItem from './StackScreen/MyItem';
+import WinningItem from './StackScreen/WinningItem';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +42,36 @@ function MainScreen() {
                 options={{
                     headerShown: true,
                     headerTitle: 'Payment',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="ShowHistoryScreen" component={ShowHistoryScreen}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'History',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="MyItem" component={MyItem}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'My Item',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="WinningItem" component={WinningItem}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Winning Item',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         color: '#FF5862'

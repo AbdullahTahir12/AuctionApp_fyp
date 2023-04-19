@@ -61,7 +61,8 @@ const AddItem = ({ navigation, route }) => {
                                     productimage: url,
                                     status: 'no',
                                     category_type: values.category_type,
-                                    user_add_category: route.params.user_name
+                                    user_add_category: route.params.user_name,
+                                    winning_person_key: ''
                                 })
                                 .then(() => {
                                     console.log('User added!');

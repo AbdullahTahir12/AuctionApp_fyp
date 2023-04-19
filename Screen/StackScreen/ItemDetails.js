@@ -95,6 +95,31 @@ const ItemDetails = ({ route, navigation }) => {
         const interval = setInterval(() => {
             if (timeRemaining > 0) {
                 setTimeRemaining(timeRemaining - 1);
+            } else {
+                if (bids.length == 0) {
+                    firestore()
+                        .collection('Item_Data')
+                        .doc(route.params.key)
+                        .update({
+                            status: 'yes',
+                            winning_person_key: 'No One Bids',
+                        })
+                        .then(() => {
+                            console.log('Bids Completed!');
+                        });
+                } else {
+                    firestore()
+                        .collection('Item_Data')
+                        .doc(route.params.key)
+                        .update({
+                            status: 'yes',
+                            winning_person_key: bids[0].key,
+                            winning_bid_value: max
+                        })
+                        .then(() => {
+                            navigation.goBack()
+                        });
+                }
             }
         }, 1000);
         return () => clearInterval(interval);

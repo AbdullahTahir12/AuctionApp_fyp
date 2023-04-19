@@ -115,9 +115,13 @@ const ProfileScreen = ({ navigation }) => {
                 }} style={styles.btnstyle}>
                     <Text style={styles.btntextstyle}>Add Item</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.5} style={[styles.btnstyle, {
-                    marginTop: 8
-                }]}>
+                <TouchableOpacity activeOpacity={0.5}
+                    onPress={() => {
+                        navigation.navigate('ShowHistoryScreen')
+                    }}
+                    style={[styles.btnstyle, {
+                        marginTop: 8
+                    }]}>
                     <Text style={styles.btntextstyle}>Show History</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity
