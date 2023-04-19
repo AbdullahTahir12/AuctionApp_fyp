@@ -124,17 +124,17 @@ const ProfileScreen = ({ navigation }) => {
                     }]}>
                     <Text style={styles.btntextstyle}>Show History</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity
+                <TouchableOpacity
                     activeOpacity={0.5}
                     style={[styles.btnstyle, {
                         marginTop: 8
                     }]}
                     onPress={() => {
-                        navigation.navigate('EditProfile')
+                        navigation.navigate('ShowProfileOption')
                     }}
                 >
                     <Text style={styles.btntextstyle}>Edit Profile</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.5}
                     style={[styles.btnstyle, {

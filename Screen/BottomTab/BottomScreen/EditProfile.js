@@ -10,20 +10,33 @@ const image1 = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg
 
 const EditProfile = ({ navigation }) => {
     const [image, setimage] = useState(null)
+    const [image_url, setimage_url] = useState('')
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
 
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return () => subscriber();
+    }, []);
+
     function onAuthStateChanged(user) {
-        setUser(user);
-        if (initializing) setInitializing(false);
+        try {
+            setUser(user);
+            if (initializing) setInitializing(false);
+        } catch (error) {
+            console.error('Error in onAuthStateChanged:', error);
+        }
     }
 
     useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-        return subscriber;
-    }, []);
-
-    console.log(user)
+        if (!initializing && user && user.uid) {
+            try {
+                setimage(user.photoURL)
+            } catch (error) {
+                console.error('Error in Firestore query:', error);
+            }
+        }
+    }, [initializing, user]);
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View>
@@ -32,11 +45,30 @@ const EditProfile = ({ navigation }) => {
                     initialValues={{
                         name: user ? user.displayName : '',
                         email: user ? user.email : '',
-                        password: '',
-                        confirmPassword: '',
                     }}
                     onSubmit={async (values) => {
+                        if (image == null) {
+                            alert('Select Profile Image')
+                        } else if (image != null) {
+                            await user.updateProfile({
+                                displayName: values.name,
+                                photoURL: image_url
+                            });
+                            alert('Your profile has been updated')
+                        } else {
+                            const uploadUri = image;
+                            let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+                            const storageRef = storage().ref(`User_Image/${filename}`);
+                            const task = storageRef.putFile(uploadUri);
+                            await task;
+                            const url = await storageRef.getDownloadURL();
+                            await userCredential.user.updateProfile({
+                                displayName: values.name,
+                                photoURL: url
+                            });
 
+                            alert('Your profile has been updated 1')
+                        }
                     }
                     }
                     validationSchema={yup.object().shape({
@@ -50,12 +82,6 @@ const EditProfile = ({ navigation }) => {
                             .string()
                             .email('Invalid email format')
                             .required('Email is required'),
-                        password: yup.string()
-                            .min(6, 'Password must be at least 6 characters')
-                            .required('Password is required'),
-                        confirmPassword: yup.string()
-                            .oneOf([yup.ref('password')], 'Passwords do not match')
-                            .required('Confirm Password is required'),
                     })}
                 >
                     {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, isSubmitting, setFieldValue }) => (
@@ -64,9 +90,9 @@ const EditProfile = ({ navigation }) => {
                                 <Text style={{ color: '#FF4949', fontSize: 25 }}>Edit Profile</Text>
                             </View>
                             <View style={{ alignItems: "center" }}>
-                                {user && user.photoURL ? (
+                                {user ? (
                                     <Image
-                                        source={{ uri: user.photoURL ? user.photoURL : image1 }}
+                                        source={{ uri: image == null ? user.photoURL : image }}
                                         style={styles.image}
                                     />
                                 ) : (
@@ -74,7 +100,8 @@ const EditProfile = ({ navigation }) => {
                                         source={{ uri: image1 }}
                                         style={styles.image}
                                     />
-                                )}
+                                )
+                                }
                             </View>
                             <TouchableOpacity onPress={() => {
                                 ImagePicker.openPicker({
@@ -83,6 +110,7 @@ const EditProfile = ({ navigation }) => {
                                     cropping: true
                                 }).then(image => {
                                     setimage(image.path);
+                                    setimage_url('')
                                 }).catch((err) => {
                                     console.log(err)
                                 })
@@ -108,32 +136,12 @@ const EditProfile = ({ navigation }) => {
                                     onChangeText={handleChange('email')}
                                     placeholder="Enter email address"
                                     onBlur={() => setFieldTouched('email')}
+                                    editable={false}
+                                    placeholderTextColor={"black"}
                                 />
                             </View>
                             {touched.email && errors.email &&
                                 <Text style={{ fontSize: 12, color: '#FF0D10', marginLeft: "3%" }}>{errors.email}</Text>
-                            }
-                            <View style={styles.sectionStyle}>
-                                <TextInput
-                                    style={{ flex: 1, textAlign: "center", fontFamily: 'OpenSans-MediumItalic', fontFamily: 'OpenSans-MediumItalic' }}
-                                    onChangeText={handleChange('password')}
-                                    placeholder="Enter Passowrd"
-                                    onBlur={() => setFieldTouched('password')}
-                                />
-                            </View>
-                            {touched.password && errors.password &&
-                                <Text style={{ fontSize: 12, color: '#FF0D10', marginLeft: "3%" }}>{errors.password}</Text>
-                            }
-                            <View style={styles.sectionStyle}>
-                                <TextInput
-                                    style={{ flex: 1, textAlign: "center", fontFamily: 'OpenSans-MediumItalic', fontFamily: 'OpenSans-MediumItalic' }}
-                                    onChangeText={handleChange('confirmPassword')}
-                                    placeholder="Enter Passowrd Again"
-                                    onBlur={() => setFieldTouched('confirmPassword')}
-                                />
-                            </View>
-                            {touched.confirmPassword && errors.confirmPassword &&
-                                <Text style={{ fontSize: 12, color: '#FF0D10', marginLeft: "3%" }}>{errors.confirmPassword}</Text>
                             }
                             <View>
                                 <View>

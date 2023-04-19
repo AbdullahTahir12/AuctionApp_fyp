@@ -13,6 +13,7 @@ import PaymentScreen from './StackScreen/PaymentScreen';
 import ShowHistoryScreen from './StackScreen/ShowHistoryScreen';
 import MyItem from './StackScreen/MyItem';
 import WinningItem from './StackScreen/WinningItem';
+import ShowProfileOption from './StackScreen/ShowProfileOption';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,9 +26,18 @@ function MainScreen() {
             <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="AddItem" component={AddItem} />
             <Stack.Screen name="ForgetPasswordScreen" component={ForgetPasswordScreen} />
+            <Stack.Screen name="EditProfile"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Personal Information',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+                component={EditProfile} />
             <Stack.Screen name="ItemDetails" component={ItemDetails}
                 options={{
                     headerShown: true,
@@ -72,6 +82,16 @@ function MainScreen() {
                 options={{
                     headerShown: true,
                     headerTitle: 'Winning Item',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        color: '#FF5862'
+                    }
+                }}
+            />
+            <Stack.Screen name="ShowProfileOption" component={ShowProfileOption}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Profile Option',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         color: '#FF5862'
