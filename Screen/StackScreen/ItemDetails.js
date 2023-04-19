@@ -18,12 +18,12 @@ const ItemDetails = ({ route, navigation }) => {
     const [btnstate, setbtnstate] = useState(false)
     const [uuuid, setuuuid] = useState([])
     const [add_to_favourite, setadd_to_favourite] = useState(false)
-    const [favorite_details, setfavorite_details] = useState(1)
+    const [favorite_details, setfavorite_details] = useState([])
 
     const AddBid = () => {
         if (user) {
             navigation.navigate('PaymentScreen', {
-                doc_key: route.params.item.key,
+                doc_key: route.params.key,
                 user_name: user.displayName,
                 user_image: user.photoURL,
                 key: user.uid,
@@ -48,44 +48,16 @@ const ItemDetails = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        const targetDate = moment(route.params.item.selectedEndDate, 'YYYY-MM-DD HH:mm:ss');
+        const targetDate = moment(route.params.selectedEndDate, 'YYYY-MM-DD HH:mm:ss');
         const now = moment();
         const duration = moment.duration(targetDate.diff(now));
         const secondsRemaining = duration.asSeconds();
         setTimeRemaining(secondsRemaining);
         const subscriber = firestore()
             .collection('Item_Data')
-            .doc(route.params.item.key)
+            .doc(route.params.key)
             .onSnapshot(documentSnapshot => {
                 setdata(documentSnapshot.data());
-
-                if (documentSnapshot.data().favourite === undefined) {
-                    setadd_to_favourite(false)
-                } else {
-                    const favourite = documentSnapshot.data().favourite;
-                    const index = favourite.findIndex(item => item.user_key === route.params.uid);
-                    // console.warn(index)
-                    if (index !== -1) {
-                        const item = favourite[index];
-                        setadd_to_favourite(true)
-                        setfavorite_details(index)
-                        console.warn(index)
-                    } else {
-                        setadd_to_favourite(false)
-                        setfavorite_details(0)
-                        console.warn('no')
-                        setfavorite_details(1)
-                    }
-                    // const favourite = documentSnapshot.data().favourite.filter(item => item.user_key === route.params.uid)
-                    // console.warn(favourite)
-                    // if (favourite.length > 0) {
-                    //     setadd_to_favourite(true)
-                    //     setfavorite_details(favourite)
-                    // } else {
-                    //     setadd_to_favourite(false)
-                    //     setfavorite_details([])
-                    // }
-                }
 
                 if (documentSnapshot.data().bids === undefined) {
                     setbids([]);
@@ -128,50 +100,71 @@ const ItemDetails = ({ route, navigation }) => {
         return () => clearInterval(interval);
     }, [timeRemaining]);
 
+    useEffect(() => {
+        if (!initializing && user && user.uid) {
+            try {
+                const subscriber = firestore()
+                    .collection('Favourite')
+                    .where('user_key', '==', user.uid)
+                    .where('item_key', '==', route.params.key)
+                    .onSnapshot(querySnapshot => {
+                        const favorite_details = [];
+                        querySnapshot.forEach(documentSnapshot => {
+                            favorite_details.push({
+                                ...documentSnapshot.data(),
+                                doc_key: documentSnapshot.id,
+                            });
+                        });
+                        // setData(users);
+                        // console.warn(favorite_details)
+                        if (favorite_details.length == 0) {
+                            setadd_to_favourite(false)
+                        } else {
+                            const favorite_details_data = favorite_details.filter(item => item.item_key == route.params.key)
+                            if (favorite_details_data) {
+                                setadd_to_favourite(true)
+                                setfavorite_details(favorite_details_data)
+                            }
+                        }
+                    });
+
+                return () => subscriber();
+            } catch (error) {
+                console.error('Error in Firestore query:', error);
+            }
+        }
+    }, [initializing, user]);
+
 
     const addtofav = () => {
         if (user) {
-            // console.warn(favorite_details)
-            if (favorite_details == 1) {
-                const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
-                bidsRef.get().then((doc) => {
-                    if (doc.exists) {
-                        const bidsRefList = doc.data().favourite || [];
-                        const updatedbidsList = [...bidsRefList, {
-                            user_key: route.params.uid,
-                            user_name: user.displayName,
-                            status: "yes"
-                        }];
-                        bidsRef.update({ favourite: updatedbidsList })
-                            .then(() => {
-                                console.warn("Favourites updated")
-                            })
-                            .catch((error) => {
-                                console.error("Error updating Bids: ", error);
-                            });
-                    } else {
-                        console.error("User document not found");
-                    }
-                }).catch((error) => {
-                    console.error("Error getting user document: ", error);
-                });
+            if (add_to_favourite == false) {
+                firestore()
+                    .collection("Favourite")
+                    .add({
+                        item_key: route.params.key,
+                        user_name: user.displayName,
+                        user_key: user.uid,
+                        selectedEndDate: route.params.selectedEndDate,
+                        productimage: route.params.productimage,
+                        user_add_category: route.params.user_add_category,
+                        title: data.title,
+                        description: data.description
+                    })
+                    .then(() => {
+                        console.log('Add to favorites Added');
+                    }).catch((err) => {
+                        console.log(err)
+                    })
             } else {
-                const bidsRef = firestore().collection('Item_Data').doc(route.params.item.key);
-
-                bidsRef.get().then((doc) => {
-                    const favouriteArray = doc.data().favourite;
-                    if (favouriteArray) {
-                        bidsRef.update({
-                            favourite: firestore.FieldValue.arrayRemove(favouriteArray[favorite_details])
-                        }).then(() => {
-                            console.log("Array index successfully removed");
-                        }).catch((error) => {
-                            console.error("Error removing array index: ", error);
-                        });
-                    }
-                }).catch((error) => {
-                    console.error("Error getting document:", error);
-                });
+                // console.warn(favorite_details[0].doc_key)
+                firestore()
+                    .collection('Favourite')
+                    .doc(favorite_details[0].doc_key)
+                    .delete()
+                    .then(() => {
+                        setadd_to_favourite(false)
+                    });
             }
         } else {
             alert('Please Login')
@@ -192,7 +185,7 @@ const ItemDetails = ({ route, navigation }) => {
         <View style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={{ marginTop: 5 }}>
                 <Image
-                    source={{ uri: route.params.item.productimage }}
+                    source={{ uri: route.params.productimage }}
                     style={{ width: width, height: 215, resizeMode: 'contain' }}
                 />
             </View>
@@ -227,7 +220,7 @@ const ItemDetails = ({ route, navigation }) => {
                 <View>
                     <View>
                         <Text style={{ color: 'black' }}>Name</Text>
-                        <Text style={{ color: 'grey' }}>{route.params.item.user_add_category}</Text>
+                        <Text style={{ color: 'grey' }}>{route.params.user_add_category}</Text>
                     </View>
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: 'black' }}>Price</Text>

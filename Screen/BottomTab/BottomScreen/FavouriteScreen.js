@@ -27,9 +27,8 @@ const FavouriteScreen = ({ navigation }) => {
     if (!initializing && user && user.uid) {
       try {
         const subscriber = firestore()
-          .collection('Item_Data')
-          .where('uid', '==', user.uid)
-          .where('status', '==', 'yes')
+          .collection('Favourite')
+          .where('user_key', '==', user.uid)
           .onSnapshot(querySnapshot => {
             const users = [];
             querySnapshot.forEach(documentSnapshot => {
@@ -39,6 +38,7 @@ const FavouriteScreen = ({ navigation }) => {
               });
             });
             setData(users);
+            // console.warn(users)
           });
 
         return () => subscriber();
@@ -46,9 +46,11 @@ const FavouriteScreen = ({ navigation }) => {
         // Handle error
         console.error('Error in Firestore query:', error);
       }
+    }else{
+      setData([])
     }
   }, [initializing, user]);
-  
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
@@ -73,8 +75,11 @@ const FavouriteScreen = ({ navigation }) => {
               <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity onPress={() => {
                   navigation.navigate('ItemDetails', {
-                    item: item,
-                    uid: user == null ? 'user_not' : user.uid
+                    uid: user == null ? 'user_not' : user.uid,
+                    key: item.item_key,
+                    selectedEndDate: item.selectedEndDate,
+                    productimage: item.productimage,
+                    user_add_category: item.user_add_category
                   })
                   // console.warn(user == null ? 'user_not' : user.uid)
                 }}>

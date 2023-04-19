@@ -75,8 +75,12 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity activeOpacity={0.3}
                   onPress={() => {
                     navigation.navigate('ItemDetails', {
-                      item: item,
-                      uid: user == null ? 'user_not' : user.uid
+                      // item: item,
+                      uid: user == null ? 'user_not' : user.uid,
+                      key: item.key,
+                      selectedEndDate: item.selectedEndDate,
+                      productimage: item.productimage,
+                      user_add_category: item.user_add_category
                     })
                     // console.warn(user == null ? 'user_not' : user.uid)
                   }}
