@@ -1,7 +1,6 @@
 import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 
 const { width, height } = Dimensions.get('screen')
 
@@ -10,6 +9,7 @@ const MainAdminScreen = ({ navigation }) => {
   const [active_category_type, setActive_category_type] = useState('Electrical')
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [status, setStatus] = useState('no')
 
   const categories = [
     { id: 1, category_type: 'Electrical' },
@@ -18,12 +18,14 @@ const MainAdminScreen = ({ navigation }) => {
     { id: 4, category_type: 'Art And Design' },
     { id: 5, category_type: 'Technology' },
     { id: 6, category_type: 'Others' },
+    { id: 7, category_type: 'Sold' },
   ]
 
   useEffect(() => {
     const subscriber = firestore()
       .collection('Item_Data')
       .where('category_type', '==', active_category_type)
+      .where('status', '==', status)
       .onSnapshot(querySnapshot => {
         const users = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -39,7 +41,7 @@ const MainAdminScreen = ({ navigation }) => {
   }, [active_category_type]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'lightgrey' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ marginTop: 10, marginHorizontal: 13, alignItems: "flex-end" }}>
         <TouchableOpacity
           onPress={() => {
@@ -88,9 +90,13 @@ const MainAdminScreen = ({ navigation }) => {
                   else if (item.id == 5) {
                     setActive(5)
                     setActive_category_type('Technology')
-                  } else {
+                  } else if (item.id == 6) {
                     setActive(6)
                     setActive_category_type('Others')
+                  } else {
+                    setActive(7)
+                    setActive_category_type('Sold')
+                    setStatus('yes')
                   }
                 }} style={{ width: 150, backgroundColor: item.id == active ? '#FF4949' : 'grey', padding: 10, borderRadius: 20 }}>
                   <Text style={{ textAlign: 'center', color: item.id == active ? "white" : 'black', fontSize: 16 }}>{item.category_type}</Text>
@@ -103,9 +109,9 @@ const MainAdminScreen = ({ navigation }) => {
 
       <View>
         <FlatList
-        contentContainerStyle={{
-          paddingBottom:200,
-        }}
+          contentContainerStyle={{
+            paddingBottom: 200,
+          }}
           data={data.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))}
           numColumns={2}
           ListEmptyComponent={

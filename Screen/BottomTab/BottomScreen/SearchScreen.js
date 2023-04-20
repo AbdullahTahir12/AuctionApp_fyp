@@ -51,7 +51,7 @@ const SearchScreen = ({ navigation }) => {
     return subscriber;
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: 'lightgrey' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ alignItems: 'center', marginTop: 10 }}>
         <TextInput
           placeholder='Find the best auctions'
@@ -59,8 +59,10 @@ const SearchScreen = ({ navigation }) => {
           style={{
             borderWidth: 1,
             width: '95%',
-            borderRadius: 10
+            borderRadius: 10,
+            backgroundColor:'lightgrey'
           }}
+          placeholderTextColor={'black'}
         />
       </View>
       <View>

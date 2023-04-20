@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 
 const SplashScreen = ({ navigation }) => {
     useEffect(() => {
-        setInterval(() => {
+        setTimeout(() => {
             navigation.navigate('MainBottomTab')
         }, 2000);
     }, [])

@@ -1,12 +1,12 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { CardField, useStripe, createToken, StripeProvider } from '@stripe/stripe-react-native';
 import firestore from '@react-native-firebase/firestore';
 
 const PaymentScreen = ({ route, navigation }) => {
     const [cardinfo, setcardinfo] = useState(null)
-    const [token, settoken] = useState(null)
     const [bidValue, setbidValue] = useState('')
+    const [btn, setbtn] = useState(false)
     const addbidsvaluepress = async () => {
         // console.warn({
         //     bidValue: bidValue,
@@ -14,6 +14,7 @@ const PaymentScreen = ({ route, navigation }) => {
         //     max: route.params.max
         // })
         if (bidValue > route.params.price && !route.params.max) {
+            setbtn(true)
             const generatetoken = await createToken({ ...cardinfo, type: 'Card' })
             const bidsRef = firestore().collection('Item_Data').doc(route.params.doc_key);
 
@@ -29,10 +30,12 @@ const PaymentScreen = ({ route, navigation }) => {
                     }];
                     bidsRef.update({ bids: updatedbidsList })
                         .then(() => {
+                            setbtn(false)
                             navigation.goBack()
                         })
                         .catch((error) => {
                             console.error("Error updating Bids: ", error);
+                            setbtn(false)
                         });
                 } else {
                     console.error("User document not found");
@@ -41,6 +44,7 @@ const PaymentScreen = ({ route, navigation }) => {
                 console.error("Error getting user document: ", error);
             });
         } else if (bidValue > route.params.max && route.params.max !== 0) {
+            setbtn(true)
             const bidsRef = firestore().collection('Item_Data').doc(route.params.doc_key);
             const generatetoken = await createToken({ ...cardinfo, type: 'Card' })
 
@@ -57,9 +61,11 @@ const PaymentScreen = ({ route, navigation }) => {
                     bidsRef.update({ bids: updatedbidsList })
                         .then(() => {
                             navigation.goBack()
+                            setbtn(false)
                         })
                         .catch((error) => {
                             console.error("Error updating Bids: ", error);
+                            setbtn(false)
                         });
                 } else {
                     console.error("User document not found");
@@ -81,10 +87,10 @@ const PaymentScreen = ({ route, navigation }) => {
         }
     }
     return (
-        <View>
+        <View style={{ padding: 10 }}>
             <TextInput
                 placeholder='Place Your Bids Here'
-                style={{ borderWidth: 1 }}
+                style={{ borderWidth: 2, borderColor: 'grey' }}
                 onChangeText={(e) => setbidValue(e)}
             />
             <StripeProvider
@@ -100,12 +106,14 @@ const PaymentScreen = ({ route, navigation }) => {
                     cardStyle={{
                         backgroundColor: '#FFFFFF',
                         textColor: '#000000',
+
                     }}
                     style={{
                         width: '100%',
                         height: 50,
                         marginVertical: 30,
                     }}
+
                     onCardChange={(cardDetails) => {
                         fetchcardinfo(cardDetails)
                     }}
@@ -114,17 +122,21 @@ const PaymentScreen = ({ route, navigation }) => {
                     }}
                 />
             </StripeProvider>
-            <TouchableOpacity
-                activeOpacity={0.5}
-                style={[styles.btnstyle, {
-                    marginTop: 8
-                }]}
-                onPress={() => {
-                    addbidsvaluepress()
-                }}
-            >
-                <Text style={styles.btntextstyle}>Add Bid</Text>
-            </TouchableOpacity>
+            {
+                btn ? <ActivityIndicator animating={btn} size={25} style={{ marginTop: 10 }} color={"#FF4949"} />
+                    :
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.btnstyle, {
+                            marginTop: 8
+                        }]}
+                        onPress={() => {
+                            addbidsvaluepress()
+                        }}
+                    >
+                        <Text style={styles.btntextstyle}>Add Bid</Text>
+                    </TouchableOpacity>
+            }
         </View>
     )
 }

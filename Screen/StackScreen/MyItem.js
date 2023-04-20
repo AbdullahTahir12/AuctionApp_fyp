@@ -62,6 +62,11 @@ const MyItem = () => {
                     paddingBottom: 35
                 }}
                 data={data}
+                ListEmptyComponent={
+                    <View style={{ flex: 1, alignItems: "center", marginTop: "50%" }}>
+                        <Text style={{ color: 'red', fontSize: 18 }}>Nothing To Show</Text>
+                    </View>
+                }
                 renderItem={({ item, index }) => {
                     return (
                         <View style={{ padding: 10, backgroundColor: 'lightgrey', marginTop: 25 }}>

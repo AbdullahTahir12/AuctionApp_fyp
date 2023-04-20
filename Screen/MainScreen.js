@@ -25,7 +25,7 @@ function MainScreen() {
         <Stack.Navigator screenOptions={{
             headerShown: false
         }}>
-            {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
             <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
