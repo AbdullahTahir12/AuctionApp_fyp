@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import auth from '@react-native-firebase/auth';
+import { useFocusEffect } from '@react-navigation/native';
 
 const image1 = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg"
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation, route }) => {
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
 
@@ -12,10 +13,18 @@ const ProfileScreen = ({ navigation }) => {
         if (initializing) setInitializing(false);
     }
 
-    useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-        return subscriber;
-    }, []);
+    // useEffect(() => {
+    //     console.warn(route)
+    //     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    //     return subscriber;
+    // }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+            return subscriber;
+        }, [])
+    );
 
     // console.log(user)
 
@@ -76,9 +85,8 @@ const ProfileScreen = ({ navigation }) => {
             justifyContent: "center",
         }}>
             <View style={{ alignItems: "center", marginTop: 20 }}>
-                {user && user.photoURL ? (
                     <Image
-                        source={{ uri: user.photoURL ? user.photoURL : image1 }}
+                        source={{ uri: route.params.photoURL ? route.params.photoURL : user.photoURL }}
                         style={{
                             height: 120,
                             width: 120,
@@ -86,17 +94,6 @@ const ProfileScreen = ({ navigation }) => {
                             borderRadius: 80,
                         }}
                     />
-                ) : (
-                    <Image
-                        source={{ uri: image1 }}
-                        style={{
-                            height: 120,
-                            width: 120,
-                            resizeMode: 'contain',
-                            borderRadius: 80,
-                        }}
-                    />
-                )}
             </View>
             <View>
                 <Text
@@ -105,7 +102,7 @@ const ProfileScreen = ({ navigation }) => {
                         marginTop: 20,
                         fontSize: 25,
                         color: 'black'
-                    }}>Welcome <Text style={{ color: 'red', fontSize: 15 }}>{user.displayName}</Text></Text>
+                    }}>Welcome <Text style={{ color: 'red', fontSize: 15 }}>{route.params.displayName ? route.params.displayName : user.displayName}</Text></Text>
             </View>
             <View style={{ alignItems: "center", marginTop: 30 }}>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {

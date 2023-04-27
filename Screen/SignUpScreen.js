@@ -38,7 +38,10 @@ const SignUpScreen = ({ navigation }) => {
                   photoURL: url
                 });
 
-                navigation.goBack();
+                navigation.navigate("Profile", {
+                  displayName: values.name,
+                  photoURL: url
+                })
 
               } catch (error) {
                 console.log('Error creating user: ', error);
