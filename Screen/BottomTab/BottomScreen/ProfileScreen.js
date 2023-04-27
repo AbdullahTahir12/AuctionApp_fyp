@@ -13,20 +13,12 @@ const ProfileScreen = ({ navigation, route }) => {
         if (initializing) setInitializing(false);
     }
 
-    // useEffect(() => {
-    //     console.warn(route)
-    //     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    //     return subscriber;
-    // }, []);
-
     useFocusEffect(
         React.useCallback(() => {
             const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
             return subscriber;
         }, [])
     );
-
-    // console.log(user)
 
     if (initializing) return null;
 
@@ -85,15 +77,15 @@ const ProfileScreen = ({ navigation, route }) => {
             justifyContent: "center",
         }}>
             <View style={{ alignItems: "center", marginTop: 20 }}>
-                    <Image
-                        source={{ uri: route.params.photoURL ? route.params.photoURL : user.photoURL }}
-                        style={{
-                            height: 120,
-                            width: 120,
-                            resizeMode: 'contain',
-                            borderRadius: 80,
-                        }}
-                    />
+                <Image
+                    source={{ uri: route.params == undefined ? user.photoURL : route.params.photoURL }}
+                    style={{
+                        height: 120,
+                        width: 120,
+                        resizeMode: 'contain',
+                        borderRadius: 80,
+                    }}
+                />
             </View>
             <View>
                 <Text
@@ -102,7 +94,7 @@ const ProfileScreen = ({ navigation, route }) => {
                         marginTop: 20,
                         fontSize: 25,
                         color: 'black'
-                    }}>Welcome <Text style={{ color: 'red', fontSize: 15 }}>{route.params.displayName ? route.params.displayName : user.displayName}</Text></Text>
+                    }}>Welcome <Text style={{ color: 'red', fontSize: 15 }}>{route.params == undefined ? user.displayName : route.params.displayName}</Text></Text>
             </View>
             <View style={{ alignItems: "center", marginTop: 30 }}>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {
