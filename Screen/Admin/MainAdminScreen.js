@@ -22,23 +22,41 @@ const MainAdminScreen = ({ navigation }) => {
   ]
 
   useEffect(() => {
-    const subscriber = firestore()
-      .collection('Item_Data')
-      .where('category_type', '==', active_category_type)
-      .where('status', '==', status)
-      .onSnapshot(querySnapshot => {
-        const users = [];
-        querySnapshot.forEach(documentSnapshot => {
-          users.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+    if (active_category_type == 'Sold') {
+      const subscriber = firestore()
+        .collection('Item_Data')
+        .where('status', '==', status)
+        .onSnapshot(querySnapshot => {
+          const users = [];
+          querySnapshot.forEach(documentSnapshot => {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
           });
+          setData(users);
         });
-        setData(users);
-      });
 
-    return () => subscriber();
-  }, [active_category_type]);
+      return () => subscriber();
+    } else {
+      const subscriber = firestore()
+        .collection('Item_Data')
+        .where('category_type', '==', active_category_type)
+        .where('status', '==', status)
+        .onSnapshot(querySnapshot => {
+          const users = [];
+          querySnapshot.forEach(documentSnapshot => {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
+          });
+          setData(users);
+        });
+
+      return () => subscriber();
+    }
+  }, [active_category_type, status]);
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -74,29 +92,36 @@ const MainAdminScreen = ({ navigation }) => {
                   if (item.id == 1) {
                     setActive(1)
                     setActive_category_type('Electrical')
+                    setStatus('no')
                   }
                   else if (item.id == 2) {
                     setActive(2)
                     setActive_category_type('Clothes')
+                    setStatus('no')
                   }
                   else if (item.id == 3) {
                     setActive(3)
                     setActive_category_type('Sports')
+                    setStatus('no')
                   }
                   else if (item.id == 4) {
                     setActive(4)
                     setActive_category_type('Art And Design')
+                    setStatus('no')
                   }
                   else if (item.id == 5) {
                     setActive(5)
                     setActive_category_type('Technology')
+                    setStatus('no')
                   } else if (item.id == 6) {
                     setActive(6)
                     setActive_category_type('Others')
+                    setStatus('no')
                   } else {
                     setActive(7)
                     setActive_category_type('Sold')
                     setStatus('yes')
+
                   }
                 }} style={{ width: 150, backgroundColor: item.id == active ? '#FF4949' : 'grey', padding: 10, borderRadius: 20 }}>
                   <Text style={{ textAlign: 'center', color: item.id == active ? "white" : 'black', fontSize: 16 }}>{item.category_type}</Text>

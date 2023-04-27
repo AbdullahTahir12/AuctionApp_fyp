@@ -26,6 +26,7 @@ const SearchScreen = ({ navigation }) => {
     const subscriber = firestore()
       .collection('Item_Data')
       .where('category_type', '==', active_category_type)
+      .where('status', '==', 'no')
       .onSnapshot(querySnapshot => {
         const users = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -60,7 +61,7 @@ const SearchScreen = ({ navigation }) => {
             borderWidth: 1,
             width: '95%',
             borderRadius: 10,
-            backgroundColor:'lightgrey'
+            backgroundColor: 'lightgrey'
           }}
           placeholderTextColor={'black'}
         />

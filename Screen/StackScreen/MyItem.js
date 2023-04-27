@@ -79,36 +79,40 @@ const MyItem = () => {
                             <View style={{ marginTop: 10, marginLeft: 15 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                     <Text style={{ fontSize: 18, color: 'black', }}>{item.title}</Text>
-                                    <TouchableOpacity onPress={() => {
-                                        // console.warn(item.key)
-                                        Alert.alert(
-                                            "Are you sure you want to",
-                                            "Delete this item",
-                                            [
-                                                {
-                                                    text: "Confirm", onPress: () => {
-                                                        firestore()
-                                                            .collection('Item_Data')
-                                                            .doc(item.key)
-                                                            .delete()
-                                                            .then(() => {
-                                                                console.log('Item deleted');
-                                                            });
-                                                    }
-                                                },
-                                                { text: "Cancel", onPress: () => { } }
-                                            ]
-                                        )
-                                    }}>
-                                        <FontAwesome5
-                                            name={'trash'}
-                                            color={'red'}
-                                            size={25}
-                                            style={{
-                                                marginRight: 40
-                                            }}
-                                        />
-                                    </TouchableOpacity>
+                                    {
+                                        item.status == 'no' ?
+                                            <TouchableOpacity onPress={() => {
+                                                // console.warn(item.key)
+                                                Alert.alert(
+                                                    "Are you sure you want to",
+                                                    "Delete this item",
+                                                    [
+                                                        {
+                                                            text: "Confirm", onPress: () => {
+                                                                firestore()
+                                                                    .collection('Item_Data')
+                                                                    .doc(item.key)
+                                                                    .delete()
+                                                                    .then(() => {
+                                                                        console.log('Item deleted');
+                                                                    });
+                                                            }
+                                                        },
+                                                        { text: "Cancel", onPress: () => { } }
+                                                    ]
+                                                )
+                                            }}>
+                                                <FontAwesome5
+                                                    name={'trash'}
+                                                    color={'red'}
+                                                    size={25}
+                                                    style={{
+                                                        marginRight: 40
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
+                                            : null
+                                    }
                                 </View>
                                 <Text style={{ fontSize: 14, color: 'grey', width: '90%', marginTop: 10 }}>{data.description}</Text>
                             </View>

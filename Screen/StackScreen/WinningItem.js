@@ -79,16 +79,6 @@ const WinningItem = () => {
                             <View style={{ marginTop: 10, marginLeft: 15 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                     <Text style={{ fontSize: 18, color: 'black', }}>{item.title}</Text>
-                                    <TouchableOpacity>
-                                        <FontAwesome5
-                                            name={'trash'}
-                                            color={'red'}
-                                            size={25}
-                                            style={{
-                                                marginRight: 40
-                                            }}
-                                        />
-                                    </TouchableOpacity>
                                 </View>
                                 <Text style={{ fontSize: 14, color: 'grey', width: '90%', marginTop: 10 }}>{item.description}</Text>
                             </View>
